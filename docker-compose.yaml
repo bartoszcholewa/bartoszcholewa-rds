@@ -1,0 +1,22 @@
+version: '3.9'
+
+networks:
+  web:
+    external: true
+
+services:
+  db:
+    image: postgres:14.2-bullseye
+    env_file:
+      - .env
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./postgres.conf:/etc/postgresql/postgresql.conf
+      - ./postgres_init.sh:/docker-entrypoint-initdb.d/postgres_init.sh
+      - ./CA:/CA
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    networks:
+      - web
+    ports:
+      - "5432:5432"
+    restart: always
